@@ -1,0 +1,12 @@
+"use client";
+
+import { SectionCard } from "@/components/shared/layout/SectionCard";
+import Switch from "@/components/shared/input/Switch";
+import type { SpacerState } from "../types";
+
+type Props = { state: SpacerState; update: <K extends keyof SpacerState>(key: K, value: SpacerState[K]) => void };
+
+export default function SurfaceSection({ state, update }: Props) {
+  return <SectionCard title="Surface" subtitle="Surface controls for native layout/page-structure generation."><Switch label="Decorative" checked={state.decorative} onChange={(value) => update("decorative", value)} />
+<Switch label="Debug visible" checked={state.debugVisible} onChange={(value) => update("debugVisible", value)} /></SectionCard>;
+}
