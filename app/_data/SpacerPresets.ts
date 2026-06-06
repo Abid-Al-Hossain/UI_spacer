@@ -30,6 +30,8 @@ export const DEFAULT_SPACER_STATE: SpacerState = {
   "axis": "block",
   "token": "xl",
   "size": 72,
+  "mobileSize": 40,
+  "desktopSize": 96,
   "debugVisible": true,
   "decorative": true
 };

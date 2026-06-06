@@ -7,5 +7,44 @@ export function buildExportPayload(state: SpacerState, fileName = "spacer") : Ex
 }
 
 export function buildReactCode(state: SpacerState) {
-  return ["import * as React from \"react\";", "", "const state = " + JSON.stringify(state, null, 2) + ";", "", "export default function SpacerComponent() {", "  return <section id={state.id} aria-label={state.landmarkLabel} style={{ width: state.width, minHeight: state.height, padding: state.padding, borderRadius: state.radius, border: state.borderWidth + 'px solid ' + state.border, background: state.background, color: state.foreground, fontFamily: state.fontFamily }}>{state.title}</section>;", "}", ""].join("\n");
+  return `import * as React from "react";
+
+const state = ${JSON.stringify(state, null, 2)};
+
+export default function SpacerComponent() {
+  const mobileSize = state.mobileSize ?? Math.max(4, Math.round(state.size * 0.6));
+  const desktopSize = state.desktopSize ?? state.size;
+  const responsiveSize = \`clamp(\${mobileSize}px, 8vw, \${desktopSize}px)\`;
+  const wrapperStyle = {
+    width: state.width,
+    minHeight: state.height,
+    padding: state.padding,
+    margin: state.margin,
+    display: "grid",
+    placeItems: "center",
+    borderRadius: state.radius,
+    border: state.borderWidth + "px solid " + state.border,
+    boxShadow: "0 " + Math.round(state.shadow / 3) + "px " + state.shadow + "px rgba(0,0,0,.28)",
+    background: state.background,
+    color: state.foreground,
+    fontFamily: state.fontFamily
+  };
+  const spacerStyle = {
+    width: state.axis === "block" ? "100%" : responsiveSize,
+    height: state.axis === "inline" ? 1 : responsiveSize,
+    minHeight: state.axis === "both" ? responsiveSize : undefined,
+    borderRadius: state.radius,
+    outline: state.debugVisible ? "1px dashed " + state.accent : undefined,
+    background: state.debugVisible ? "rgba(255,255,255,.08)" : "transparent"
+  };
+
+  return (
+    <div id={state.id} role="presentation" aria-hidden={state.decorative || undefined} style={wrapperStyle}>
+      <div style={spacerStyle}>
+        {state.debugVisible && <span style={{ display: "grid", placeItems: "center", height: "100%", color: state.muted, fontSize: state.bodySize, fontFamily: state.fontFamily }}>{state.token}: {mobileSize}-{desktopSize}px</span>}
+      </div>
+    </div>
+  );
+}
+`;
 }

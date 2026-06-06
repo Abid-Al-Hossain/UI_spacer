@@ -30,6 +30,8 @@ export type SpacerState = {
   axis: "block" | "inline" | "both";
   token: string;
   size: number;
+  mobileSize?: number;
+  desktopSize?: number;
   debugVisible: boolean;
   decorative: boolean;
 };
