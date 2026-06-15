@@ -10,6 +10,9 @@ export function buildReactCode(state: SpacerState) {
   return `import * as React from "react";
 
 const state = ${JSON.stringify(state, null, 2)};
+function resolveFont(s) { return s.fontBucket === "google" ? '"' + s.googleFontFamily + '", sans-serif' : "inherit"; }
+function buildShadow(s) { if (!s.shadowEnabled) return "none"; var hex = Math.round(s.shadowOpacity * 255).toString(16).padStart(2, "0"); return s.shadowX + "px " + s.shadowY + "px " + s.shadowBlur + "px " + s.shadowSpread + "px " + s.shadowColor + hex; }
+
 
 export default function SpacerComponent() {
   const mobileSize = state.mobileSize ?? Math.max(4, Math.round(state.size * 0.6));
@@ -23,8 +26,8 @@ export default function SpacerComponent() {
     display: "grid",
     placeItems: "center",
     borderRadius: state.radius,
-    border: state.borderWidth + "px solid " + state.border,
-    boxShadow: "0 " + Math.round(state.shadow / 3) + "px " + state.shadow + "px rgba(0,0,0,.28)",
+    border: state.borderWidth + "px " + state.borderStyle + " " + (state.disabled && state.disabledUseCustomColors ? state.disabledBorder : state.border),
+    boxShadow: buildShadow(state),
     background: state.background,
     color: state.foreground,
     fontFamily: state.fontFamily
